@@ -9,6 +9,9 @@ const cors_1 = __importDefault(require("cors"));
 const database_1 = require("./db/database.");
 const error_middleware_1 = require("./middleware/error.middleware");
 const roomsRouter_1 = __importDefault(require("./routes/roomsRouter"));
+const room_model_1 = require("./models/room.model");
+const node_cron_1 = __importDefault(require("node-cron"));
+const booking_1 = require("./models/booking");
 const bookingRoute_1 = __importDefault(require("./routes/bookingRoute"));
 const contact_route_1 = __importDefault(require("./routes/contact.route"));
 const getinTouchRoute_1 = __importDefault(require("./routes/getinTouchRoute"));
@@ -19,26 +22,27 @@ const port = process.env.PORT || 3000;
 (0, database_1.connectDB)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-// cron.schedule('* * * * * *', async () => {  // This will run every second
-//   try {
-//       const currentDate = new Date();
-//       // Find all bookings where the checkout date is less than the current date
-//       const expiredBookings = await Booking.find({
-//           checkOut: { $lt: currentDate },
-//       });
-//       // Update the room status for each expired booking
-//       // Update room status for each expired booking
-//       for (const booking of expiredBookings) {
-//           const room = await Room.findById(booking.room);
-//           if (room) {
-//               room.roomStatus = true;
-//               await room.save();
-//           }
-//       }
-//   } catch (error) {
-//       console.error('Error updating room status:', error);
-//   }
-// });
+node_cron_1.default.schedule('* * * * * *', async () => {
+    try {
+        const currentDate = new Date();
+        // Find all bookings where the checkout date is less than the current date
+        const expiredBookings = await booking_1.Booking.find({
+            checkOut: { $lt: currentDate },
+        });
+        // Update the room status for each expired booking
+        // Update room status for each expired booking
+        for (const booking of expiredBookings) {
+            const room = await room_model_1.Room.findById(booking.room);
+            if (room) {
+                room.roomStatus = true;
+                await room.save();
+            }
+        }
+    }
+    catch (error) {
+        console.error('Error updating room status:', error);
+    }
+});
 app.use((0, cors_1.default)({
     origin: process.env.CORS_ORIGIN,
     credentials: true

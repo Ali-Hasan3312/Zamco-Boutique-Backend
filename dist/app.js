@@ -9,32 +9,36 @@ const cors_1 = __importDefault(require("cors"));
 const database_1 = require("./db/database.");
 const error_middleware_1 = require("./middleware/error.middleware");
 const roomsRouter_1 = __importDefault(require("./routes/roomsRouter"));
-const room_model_1 = require("./models/room.model");
 const node_cron_1 = __importDefault(require("node-cron"));
 const booking_1 = require("./models/booking");
 const bookingRoute_1 = __importDefault(require("./routes/bookingRoute"));
 const contact_route_1 = __importDefault(require("./routes/contact.route"));
 const getinTouchRoute_1 = __importDefault(require("./routes/getinTouchRoute"));
 const userSubscriptionRoute_1 = __importDefault(require("./routes/userSubscriptionRoute"));
+const statsRoute_1 = __importDefault(require("./routes/statsRoute"));
 const app = (0, express_1.default)();
 dotenv_1.default.config({ path: "./config/config.env" });
 const port = process.env.PORT || 3000;
 (0, database_1.connectDB)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-node_cron_1.default.schedule('* * * * * *', async () => {
+node_cron_1.default.schedule('* * * * *', async () => {
     try {
         const currentDate = new Date();
-        // Find all bookings where the checkout date is less than the current date
-        const expiredBookings = await booking_1.Booking.find({
-            checkOut: { $lt: currentDate },
-        });
-        // Update the room status for each expired booking
-        // Update room status for each expired booking
-        for (const booking of expiredBookings) {
-            const room = await room_model_1.Room.findById(booking.room);
+        // Find all bookings
+        const allBookings = await booking_1.Booking.find({}).populate('room'); // Populate room field to get the actual Room document
+        // Update room status for each booking based on checkOut date
+        for (const booking of allBookings) {
+            const room = booking.room;
             if (room) {
-                room.roomStatus = true;
+                if (booking.checkOut < currentDate) {
+                    // If checkout date is in the past, set roomStatus to true
+                    room.roomStatus = true;
+                }
+                else {
+                    // If checkout date is in the future, set roomStatus to false
+                    room.roomStatus = false;
+                }
                 await room.save();
             }
         }
@@ -55,4 +59,5 @@ app.use("/api/v1", bookingRoute_1.default);
 app.use("/api/v1", contact_route_1.default);
 app.use("/api/v1", getinTouchRoute_1.default);
 app.use("/api/v1", userSubscriptionRoute_1.default);
+app.use("/api/v1", statsRoute_1.default);
 app.use(error_middleware_1.errorMiddleware);

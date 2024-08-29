@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.contactUs = void 0;
+exports.allMails = exports.contactUs = void 0;
 const error_middleware_1 = require("../middleware/error.middleware");
 const contact_model_1 = require("../models/contact.model");
 const errorHandler_1 = __importDefault(require("../utils/errorHandler"));
@@ -46,4 +46,12 @@ exports.contactUs = (0, error_middleware_1.TryCatch)(async (req, res, next) => {
         console.error("Error in roomBooking handler:", error);
         next(new errorHandler_1.default("Internal Server Error", 500));
     }
+});
+exports.allMails = (0, error_middleware_1.TryCatch)(async (req, res, next) => {
+    const mails = await contact_model_1.Contact.find().sort({ createdAt: -1 });
+    // Update the roomStatus to false
+    res.status(201).json({
+        success: true,
+        mails
+    });
 });

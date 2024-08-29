@@ -35,4 +35,11 @@ export const allRooms = TryCatch(async(req,res,next)=>{
         rooms
     })
 })
+export const getAllRooms = TryCatch(async(req,res,next)=>{
+    const rooms = await Room.find();
+    res.status(200).json({
+        success: true,
+        rooms
+    })
+})
 

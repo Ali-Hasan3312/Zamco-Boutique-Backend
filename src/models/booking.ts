@@ -5,11 +5,13 @@ export interface Booking extends Document {
     name: string;
     email: string;
     phoneNumber: string;
+    checkIn: Date;
     checkOut: Date;
-    adults: number;
-    children?: number;
     room: Room;
-    roomStatus: Boolean;
+    roomPrice: string;
+    roomType: string;
+    rooms: number;
+    discount: number;
   }
   const BookingSchema = new Schema<Booking>({
    name: {
@@ -33,19 +35,31 @@ export interface Booking extends Document {
         type: Date,
         required: [true, "Check-out date is required"]
     },
-    adults: {
-        type: Number,
-        default: 1
+    checkIn: {
+        type: Date,
+        required: [true, "Check-in date is required"]
     },
-    children: {
-        type: Number,
-        default: 0
-    },
-    
+   
     room: {
         type: Schema.Types.ObjectId,
         ref: "Room",
         required: [true, "Room is required"]
+    },
+    roomPrice: {
+        type: String,
+        required: [true, "Room Price is required"]
+    },
+    roomType: {
+        type: String,
+        required: [true, "Room Type is required"]
+    },
+    rooms: {
+        type: Number,
+        required: [true, "Number of Rooms required"]
+    },
+    discount: {
+        type: Number,
+        default: 0
     },
   },{timestamps:true});
 

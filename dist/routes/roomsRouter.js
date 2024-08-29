@@ -9,4 +9,5 @@ const multer_1 = require("../middleware/multer");
 const roomsRouter = (0, express_1.default)();
 roomsRouter.route("/room").post(multer_1.upload, rooms_controller_1.createRoom);
 roomsRouter.route("/room/getAll").get(rooms_controller_1.allRooms);
+roomsRouter.route("/room/getAllRooms").get(rooms_controller_1.getAllRooms);
 exports.default = roomsRouter;

@@ -77,13 +77,13 @@ exports.allBookings = (0, error_middleware_1.TryCatch)(async (req, res, next) =>
     });
 });
 exports.updatePaymentStatus = (0, error_middleware_1.TryCatch)(async (req, res, next) => {
-    const { bookingId } = req.params;
+    const { id } = req.params;
     const { paymentStatus } = req.body;
-    const booking = await booking_1.Booking.findById(bookingId);
+    const booking = await booking_1.Booking.findById(id);
     if (!booking) {
         return next(new errorHandler_1.default("Booking not found", 404));
     }
-    const updatedBooking = await booking_1.Booking.findByIdAndUpdate(bookingId, { paymentStatus }, { new: true });
+    const updatedBooking = await booking_1.Booking.findByIdAndUpdate(id, { paymentStatus }, { new: true });
     res.status(201).json({
         success: true,
         message: "Payment status updated successfully",

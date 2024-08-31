@@ -5,11 +5,7 @@ import ErrorHandler from "../utils/errorHandler";
 import sendEmail from "../utils/sendEmail";
 
 export const roomBooking = TryCatch(async (req, res, next) => {
-    try {
-        if (!req.body) {
-            return next(new ErrorHandler("Request body is missing", 400));
-        }
-        
+    
         const { name, email, phoneNumber, checkOut,checkIn, roomId, rooms } = req.body;
 
         if (!name || !email || !phoneNumber || !checkOut || !checkIn || !roomId || !rooms) {
@@ -57,10 +53,7 @@ export const roomBooking = TryCatch(async (req, res, next) => {
             message: "Room booked successfully",
             booking
         });
-    } catch (error) {
-        console.error("Error in roomBooking handler:", error);
-        next(new ErrorHandler("Internal Server Error", 500));
-    }
+   
 });
 export const allBookings = TryCatch(async (req, res, next) => {
     
@@ -79,14 +72,14 @@ export const allBookings = TryCatch(async (req, res, next) => {
    
 });
 export const updatePaymentStatus = TryCatch(async(req, res, next)=>{
-    const {bookingId} = req.params;
+    const {id} = req.params;
     const { paymentStatus } = req.body;
-    const booking = await Booking.findById(bookingId);
+    const booking = await Booking.findById(id);
     if(!booking){
         return next(new ErrorHandler("Booking not found", 404));
     }
     const updatedBooking = await Booking.findByIdAndUpdate(
-        bookingId, 
+           id, 
         { paymentStatus }, 
         { new: true }
       );

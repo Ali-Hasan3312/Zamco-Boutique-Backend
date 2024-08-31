@@ -7,4 +7,5 @@ const express_1 = __importDefault(require("express"));
 const contact_controller_1 = require("../controller/contact.controller");
 const contactRouter = (0, express_1.default)();
 contactRouter.route("/contact").post(contact_controller_1.contactUs);
+contactRouter.route("/contact/getAll").get(contact_controller_1.allMails);
 exports.default = contactRouter;

@@ -24,18 +24,30 @@ const BookingSchema = new mongoose_1.Schema({
         type: Date,
         required: [true, "Check-out date is required"]
     },
-    adults: {
-        type: Number,
-        default: 1
-    },
-    children: {
-        type: Number,
-        default: 0
+    checkIn: {
+        type: Date,
+        required: [true, "Check-in date is required"]
     },
     room: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "Room",
         required: [true, "Room is required"]
+    },
+    roomPrice: {
+        type: String,
+        required: [true, "Room Price is required"]
+    },
+    roomType: {
+        type: String,
+        required: [true, "Room Type is required"]
+    },
+    rooms: {
+        type: Number,
+        required: [true, "Number of Rooms required"]
+    },
+    discount: {
+        type: Number,
+        default: 0
     },
 }, { timestamps: true });
 exports.Booking = (0, mongoose_1.model)("Booking", BookingSchema);

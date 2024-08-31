@@ -46,3 +46,12 @@ export const contactUs = TryCatch(async (req, res, next) => {
         next(new ErrorHandler("Internal Server Error", 500));
     }
 });
+export const allMails = TryCatch(async (req, res, next) => {
+    const mails = await Contact.find().sort({ createdAt: -1 })
+        // Update the roomStatus to false
+        res.status(201).json({
+            success: true,
+            mails
+        });
+   
+});

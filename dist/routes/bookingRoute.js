@@ -7,4 +7,5 @@ const express_1 = __importDefault(require("express"));
 const booking_controller_1 = require("../controller/booking.controller");
 const bookingRouter = (0, express_1.default)();
 bookingRouter.route("/book").post(booking_controller_1.roomBooking);
+bookingRouter.route("/book/getAll").get(booking_controller_1.allBookings);
 exports.default = bookingRouter;

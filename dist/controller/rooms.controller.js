@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.allRooms = exports.createRoom = void 0;
+exports.getAllRooms = exports.allRooms = exports.createRoom = void 0;
 const error_middleware_1 = require("../middleware/error.middleware");
 const room_model_1 = require("../models/room.model");
 const cloudinary_1 = require("../utils/cloudinary");
@@ -34,6 +34,13 @@ exports.createRoom = (0, error_middleware_1.TryCatch)(async (req, res, next) => 
 });
 exports.allRooms = (0, error_middleware_1.TryCatch)(async (req, res, next) => {
     const rooms = await room_model_1.Room.find({ roomStatus: true });
+    res.status(200).json({
+        success: true,
+        rooms
+    });
+});
+exports.getAllRooms = (0, error_middleware_1.TryCatch)(async (req, res, next) => {
+    const rooms = await room_model_1.Room.find();
     res.status(200).json({
         success: true,
         rooms

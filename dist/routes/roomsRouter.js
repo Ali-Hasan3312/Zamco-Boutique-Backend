@@ -8,6 +8,7 @@ const rooms_controller_1 = require("../controller/rooms.controller");
 const multer_1 = require("../middleware/multer");
 const roomsRouter = (0, express_1.default)();
 roomsRouter.route("/room").post(multer_1.upload, rooms_controller_1.createRoom);
+roomsRouter.route("/room/delete/:id").delete(rooms_controller_1.deleteRoom);
 roomsRouter.route("/room/getAll").get(rooms_controller_1.allRooms);
 roomsRouter.route("/room/getAllRooms").get(rooms_controller_1.getAllRooms);
 exports.default = roomsRouter;

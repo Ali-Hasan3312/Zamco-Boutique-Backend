@@ -4,10 +4,7 @@ import ErrorHandler from "../utils/errorHandler";
 import sendEmail from "../utils/sendEmail";
 
 export const contactUs = TryCatch(async (req, res, next) => {
-    try {
-        if (!req.body) {
-            return next(new ErrorHandler("Request body is missing", 400));
-        }
+   
         
         const { name, email, phoneNumber, userMessage } = req.body;
 
@@ -41,10 +38,7 @@ export const contactUs = TryCatch(async (req, res, next) => {
             message: "Message sent successfully",
             contact
         });
-    } catch (error) {
-        console.error("Error in roomBooking handler:", error);
-        next(new ErrorHandler("Internal Server Error", 500));
-    }
+   
 });
 export const allMails = TryCatch(async (req, res, next) => {
     const mails = await Contact.find().sort({ createdAt: -1 })

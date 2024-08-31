@@ -23,8 +23,6 @@ export interface GetTouch extends Document {
     required: [true, "Phone Number is required"],
     trim: true,
    },
-   
-  
   },{timestamps:true});
 
   export const GetTouch = model<GetTouch>("GetTouch", ContactSchema)

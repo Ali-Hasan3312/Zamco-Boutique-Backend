@@ -55,3 +55,13 @@ export const allMails = TryCatch(async (req, res, next) => {
         });
    
 });
+export const deleteMail = TryCatch(async (req, res, next) => {
+    const mail =  await Contact.findById(req.params.id)
+       if(!mail) return next(new ErrorHandler("Mail not found", 404))
+        await mail.deleteOne()
+        res.status(201).json({
+            success: true,
+            message: "Mail Deleted Successfully"
+        });
+   
+});

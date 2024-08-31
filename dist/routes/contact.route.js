@@ -8,4 +8,5 @@ const contact_controller_1 = require("../controller/contact.controller");
 const contactRouter = (0, express_1.default)();
 contactRouter.route("/contact").post(contact_controller_1.contactUs);
 contactRouter.route("/contact/getAll").get(contact_controller_1.allMails);
+contactRouter.route("/contact/delete/:id").delete(contact_controller_1.deleteMail);
 exports.default = contactRouter;

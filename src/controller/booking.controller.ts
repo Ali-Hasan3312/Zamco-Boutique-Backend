@@ -78,4 +78,32 @@ export const allBookings = TryCatch(async (req, res, next) => {
         });
    
 });
+export const updatePaymentStatus = TryCatch(async(req, res, next)=>{
+    const {bookingId} = req.params;
+    const { paymentStatus } = req.body;
+    const booking = await Booking.findById(bookingId);
+    if(!booking){
+        return next(new ErrorHandler("Booking not found", 404));
+    }
+    const updatedBooking = await Booking.findByIdAndUpdate(
+        bookingId, 
+        { paymentStatus }, 
+        { new: true }
+      );
+    res.status(201).json({
+        success: true,
+        message: "Payment status updated successfully",
+        booking: updatedBooking
+    })
+});
+export const deleteBooking = TryCatch(async (req, res, next) => {
+    const booking =  await Booking.findById(req.params.id)
+       if(!booking) return next(new ErrorHandler("Booking not found", 404))
+        await booking.deleteOne()
+        res.status(201).json({
+            success: true,
+            message: "Booking Deleted Successfully"
+        });
+   
+});
 

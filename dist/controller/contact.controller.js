@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.allMails = exports.contactUs = void 0;
+exports.deleteMail = exports.allMails = exports.contactUs = void 0;
 const error_middleware_1 = require("../middleware/error.middleware");
 const contact_model_1 = require("../models/contact.model");
 const errorHandler_1 = __importDefault(require("../utils/errorHandler"));
@@ -53,5 +53,15 @@ exports.allMails = (0, error_middleware_1.TryCatch)(async (req, res, next) => {
     res.status(201).json({
         success: true,
         mails
+    });
+});
+exports.deleteMail = (0, error_middleware_1.TryCatch)(async (req, res, next) => {
+    const mail = await contact_model_1.Contact.findById(req.params.id);
+    if (!mail)
+        return next(new errorHandler_1.default("Mail not found", 404));
+    await mail.deleteOne();
+    res.status(201).json({
+        success: true,
+        message: "Mail Deleted Successfully"
     });
 });

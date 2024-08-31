@@ -49,5 +49,10 @@ const BookingSchema = new mongoose_1.Schema({
         type: Number,
         default: 0
     },
+    paymentStatus: {
+        type: String,
+        enum: ["Paid", "Unpaid"], // Ensure it only accepts "PAID" or "UNPAID"
+        default: "Unpaid", // Default to "UNPAID"
+    },
 }, { timestamps: true });
 exports.Booking = (0, mongoose_1.model)("Booking", BookingSchema);

@@ -1,6 +1,6 @@
 import { Document, model, Schema } from "mongoose";
 import { Room } from "./room.model";
-
+type PaymentStatus = "Paid" | "Unpaid";
 export interface Booking extends Document {
     name: string;
     email: string;
@@ -12,6 +12,7 @@ export interface Booking extends Document {
     roomType: string;
     rooms: number;
     discount: number;
+    paymentStatus: PaymentStatus;
   }
   const BookingSchema = new Schema<Booking>({
    name: {
@@ -61,6 +62,11 @@ export interface Booking extends Document {
         type: Number,
         default: 0
     },
+    paymentStatus: {
+        type: String,
+        enum: ["Paid", "Unpaid"],  // Ensure it only accepts "PAID" or "UNPAID"
+        default: "Unpaid",         // Default to "UNPAID"
+      },
   },{timestamps:true});
 
   export const Booking = model<Booking>("Booking", BookingSchema)

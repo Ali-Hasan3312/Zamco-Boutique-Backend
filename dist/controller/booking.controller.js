@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.allBookings = exports.roomBooking = void 0;
+exports.deleteBooking = exports.updatePaymentStatus = exports.allBookings = exports.roomBooking = void 0;
 const error_middleware_1 = require("../middleware/error.middleware");
 const booking_1 = require("../models/booking");
 const room_model_1 = require("../models/room.model");
@@ -74,5 +74,29 @@ exports.allBookings = (0, error_middleware_1.TryCatch)(async (req, res, next) =>
     res.status(201).json({
         success: true,
         booking
+    });
+});
+exports.updatePaymentStatus = (0, error_middleware_1.TryCatch)(async (req, res, next) => {
+    const { bookingId } = req.params;
+    const { paymentStatus } = req.body;
+    const booking = await booking_1.Booking.findById(bookingId);
+    if (!booking) {
+        return next(new errorHandler_1.default("Booking not found", 404));
+    }
+    const updatedBooking = await booking_1.Booking.findByIdAndUpdate(bookingId, { paymentStatus }, { new: true });
+    res.status(201).json({
+        success: true,
+        message: "Payment status updated successfully",
+        booking: updatedBooking
+    });
+});
+exports.deleteBooking = (0, error_middleware_1.TryCatch)(async (req, res, next) => {
+    const booking = await booking_1.Booking.findById(req.params.id);
+    if (!booking)
+        return next(new errorHandler_1.default("Booking not found", 404));
+    await booking.deleteOne();
+    res.status(201).json({
+        success: true,
+        message: "Booking Deleted Successfully"
     });
 });

@@ -5,36 +5,39 @@ import ErrorHandler from "../utils/errorHandler";
 import sendEmail from "../utils/sendEmail";
 
 export const roomBooking = TryCatch(async (req, res, next) => {
-    
-        const { name, email, phoneNumber, checkOut,checkIn, roomId, rooms } = req.body;
+    const { name, email, phoneNumber, checkOut, checkIn, roomId, rooms } = req.body;
 
-        if (!name || !email || !phoneNumber || !checkOut || !checkIn || !roomId || !rooms) {
-            return next(new ErrorHandler("Please fill all the required fields", 400));
-        }
-        const allRooms = await Room.find({ roomStatus: true });
-        if (allRooms.length === 0) {
-            return next(new ErrorHandler("No rooms available", 400));
-        }
+    if (!name || !email || !phoneNumber || !checkOut || !checkIn || !roomId || !rooms) {
+        return next(new ErrorHandler("Please fill all the required fields", 400));
+    }
 
-        const room = await Room.findById(roomId);
-        if (!room) {
-            return next(new ErrorHandler("No room found with that room type", 404));
-        }
+    const allRooms = await Room.find({ roomStatus: true });
+    if (allRooms.length === 0) {
+        return next(new ErrorHandler("No rooms available", 400));
+    }
 
-        const message = `Name: ${name}\nEmail: ${email}\nPhone: ${phoneNumber}\nRoom Title: ${room.roomType}\nRoom Price: ${room.roomPrice}`;
+    const room = await Room.findById(roomId);
+    if (!room) {
+        return next(new ErrorHandler("No room found with that room type", 404));
+    }
 
-        try {
-            await sendEmail({
-                email: email,
-                subject: `Room Booking Confirmation`,
-                message,
-            });
-        } catch (error) {
-            console.error("Failed to send email:", error);
-            return next(new ErrorHandler("Failed to send email", 500));
-        }
-        room.roomStatus = false;
-        await room.save();
+    const message = `Name: ${name}\nEmail: ${email}\nPhone: ${phoneNumber}\nRoom Title: ${room.roomType}\nRoom Price: ${room.roomPrice}`;
+
+    try {
+        await sendEmail({
+            email: email,
+            subject: `Room Booking Confirmation`,
+            message,
+        });
+    } catch (error) {
+        console.error("Failed to send email:", error);
+        return next(new ErrorHandler("Failed to send email", 500));
+    }
+
+    room.roomStatus = false;
+    await room.save();
+
+    try {
         const booking = await Booking.create({
             name,
             email,
@@ -47,13 +50,15 @@ export const roomBooking = TryCatch(async (req, res, next) => {
             roomType: room.roomType
         });
 
-        // Update the roomStatus to false
         res.status(201).json({
             success: true,
             message: "Room booked successfully",
             booking
         });
-   
+    } catch (error) {
+        console.error("Error creating booking:", error);
+        return next(new ErrorHandler("Failed to create booking", 500));
+    }
 });
 export const allBookings = TryCatch(async (req, res, next) => {
     
@@ -92,6 +97,12 @@ export const updatePaymentStatus = TryCatch(async(req, res, next)=>{
 export const deleteBooking = TryCatch(async (req, res, next) => {
     const booking =  await Booking.findById(req.params.id)
        if(!booking) return next(new ErrorHandler("Booking not found", 404))
+        const room = await Room.findById(booking.room)
+    if(room){
+        room.roomStatus = true;
+        await room.save()
+    }
+        
         await booking.deleteOne()
         res.status(201).json({
             success: true,

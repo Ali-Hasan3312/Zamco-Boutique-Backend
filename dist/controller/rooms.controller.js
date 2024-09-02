@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRoom = exports.getAllRooms = exports.allRooms = exports.createRoom = void 0;
+exports.updatRoom = exports.deleteRoom = exports.getAllRooms = exports.allRooms = exports.createRoom = void 0;
 const error_middleware_1 = require("../middleware/error.middleware");
 const room_model_1 = require("../models/room.model");
 const cloudinary_1 = require("../utils/cloudinary");
@@ -55,5 +55,44 @@ exports.deleteRoom = (0, error_middleware_1.TryCatch)(async (req, res, next) => 
     res.status(200).json({
         success: true,
         message: "Room deleted successfully"
+    });
+});
+exports.updatRoom = (0, error_middleware_1.TryCatch)(async (req, res, next) => {
+    const { id } = req.params;
+    const room = await room_model_1.Room.findById(id);
+    console.log(id);
+    if (!room) {
+        return next(new errorHandler_1.default("Room not found", 404));
+    }
+    const { roomType, roomPrice, roomStatus, roomDescription } = req.body;
+    console.log(roomPrice);
+    if (!roomType && !roomPrice && !roomStatus && !roomDescription) {
+        return next(new errorHandler_1.default("Please fill atleast one field", 400));
+    }
+    const photo = req.file?.path;
+    if (photo) {
+        const cloudPhoto = await (0, cloudinary_1.uploadOnCloudinary)(photo);
+        if (!cloudPhoto?.url) {
+            throw new Error("Failed to upload photo to Cloudinary");
+        }
+        room.photo = cloudPhoto.url;
+    }
+    if (roomType) {
+        room.roomType = roomType;
+    }
+    if (roomPrice) {
+        room.roomPrice = roomPrice;
+    }
+    if (roomStatus) {
+        room.roomStatus = roomStatus;
+    }
+    if (roomDescription) {
+        room.roomDescription = roomDescription;
+    }
+    await room.save();
+    res.status(200).json({
+        success: true,
+        message: "Room updated successfully",
+        room
     });
 });

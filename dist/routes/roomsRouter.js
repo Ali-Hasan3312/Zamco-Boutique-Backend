@@ -11,4 +11,5 @@ roomsRouter.route("/room").post(multer_1.upload, rooms_controller_1.createRoom);
 roomsRouter.route("/room/delete/:id").delete(rooms_controller_1.deleteRoom);
 roomsRouter.route("/room/getAll").get(rooms_controller_1.allRooms);
 roomsRouter.route("/room/getAllRooms").get(rooms_controller_1.getAllRooms);
+roomsRouter.route("/room/update/:id").put(multer_1.upload, rooms_controller_1.updatRoom);
 exports.default = roomsRouter;

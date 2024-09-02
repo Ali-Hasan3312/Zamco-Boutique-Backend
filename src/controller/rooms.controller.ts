@@ -53,4 +53,47 @@ export const deleteRoom = TryCatch(async(req, res, next)=>{
         success: true,
         message: "Room deleted successfully"
     })
-}) 
+}) ;
+export const updatRoom = TryCatch(async(req, res, next)=>{
+    const {id} = req.params;
+    const room = await Room.findById(id);
+    
+    
+    if(!room){
+        return next(new ErrorHandler("Room not found", 404));
+    }
+    const {roomType, roomPrice, roomStatus, roomDescription} = req.body;
+    
+    if(!roomType && !roomPrice && !roomStatus && !roomDescription){
+        return next(new ErrorHandler("Please fill atleast one field", 400));
+       }
+    const photo = req.file?.path;
+    
+    if (photo) {
+        const cloudPhoto = await uploadOnCloudinary(photo);
+        
+        if (!cloudPhoto?.url) {
+            throw new Error("Failed to upload photo to Cloudinary");
+        }
+        
+        room.photo = cloudPhoto.url;
+    }
+    if(roomType){
+        room.roomType = roomType;
+    }
+    if(roomPrice){
+        room.roomPrice = roomPrice;
+    }
+    if(roomStatus){
+        room.roomStatus = roomStatus;
+    }
+    if(roomDescription){
+        room.roomDescription = roomDescription;
+    }
+    await room.save();
+    res.status(200).json({
+        success: true,
+        message: "Room updated successfully",
+        room
+    })
+});

@@ -15,18 +15,14 @@ export interface GetTouch extends Document {
    email: {
     type: String,
     required: [true, "Email is required"],
-    unique: true,
     trim: true,
     lowercase: true, 
 },
    phoneNumber: {
     type: String,
     required: [true, "Phone Number is required"],
-    unique: true,
     trim: true,
    },
-   
-  
   },{timestamps:true});
 
   export const GetTouch = model<GetTouch>("GetTouch", ContactSchema)

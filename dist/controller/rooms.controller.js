@@ -60,12 +60,10 @@ exports.deleteRoom = (0, error_middleware_1.TryCatch)(async (req, res, next) => 
 exports.updatRoom = (0, error_middleware_1.TryCatch)(async (req, res, next) => {
     const { id } = req.params;
     const room = await room_model_1.Room.findById(id);
-    console.log(id);
     if (!room) {
         return next(new errorHandler_1.default("Room not found", 404));
     }
     const { roomType, roomPrice, roomStatus, roomDescription } = req.body;
-    console.log(roomPrice);
     if (!roomType && !roomPrice && !roomStatus && !roomDescription) {
         return next(new errorHandler_1.default("Please fill atleast one field", 400));
     }

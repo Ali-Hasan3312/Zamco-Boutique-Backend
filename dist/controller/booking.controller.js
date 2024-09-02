@@ -36,23 +36,28 @@ exports.roomBooking = (0, error_middleware_1.TryCatch)(async (req, res, next) =>
     }
     room.roomStatus = false;
     await room.save();
-    const booking = await booking_1.Booking.create({
-        name,
-        email,
-        phoneNumber,
-        checkIn,
-        checkOut,
-        rooms,
-        room: room._id,
-        roomPrice: room.roomPrice,
-        roomType: room.roomType
-    });
-    // Update the roomStatus to false
-    res.status(201).json({
-        success: true,
-        message: "Room booked successfully",
-        booking
-    });
+    try {
+        const booking = await booking_1.Booking.create({
+            name,
+            email,
+            phoneNumber,
+            checkIn,
+            checkOut,
+            rooms,
+            room: room._id,
+            roomPrice: room.roomPrice,
+            roomType: room.roomType
+        });
+        res.status(201).json({
+            success: true,
+            message: "Room booked successfully",
+            booking
+        });
+    }
+    catch (error) {
+        console.error("Error creating booking:", error);
+        return next(new errorHandler_1.default("Failed to create booking", 500));
+    }
 });
 exports.allBookings = (0, error_middleware_1.TryCatch)(async (req, res, next) => {
     const sixMonthsAgo = new Date();
@@ -85,6 +90,11 @@ exports.deleteBooking = (0, error_middleware_1.TryCatch)(async (req, res, next) 
     const booking = await booking_1.Booking.findById(req.params.id);
     if (!booking)
         return next(new errorHandler_1.default("Booking not found", 404));
+    const room = await room_model_1.Room.findById(booking.room);
+    if (room) {
+        room.roomStatus = true;
+        await room.save();
+    }
     await booking.deleteOne();
     res.status(201).json({
         success: true,

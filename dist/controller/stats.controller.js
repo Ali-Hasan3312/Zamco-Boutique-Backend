@@ -16,7 +16,7 @@ exports.getDashboardStats = (0, error_middleware_1.TryCatch)(async (req, res, ne
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999); // End of today
     const tenMonthsAgo = new Date();
-    tenMonthsAgo.setMonth(tenMonthsAgo.getMonth() - 10);
+    tenMonthsAgo.setMonth(tenMonthsAgo.getMonth() - 12);
     tenMonthsAgo.setHours(0, 0, 0, 0);
     const thisMonth = {
         start: new Date(today.getFullYear(), today.getMonth(), 1),

@@ -13,7 +13,7 @@ startOfDay.setHours(0, 0, 0, 0); // Start of today
 const endOfDay = new Date();
 endOfDay.setHours(23, 59, 59, 999); // End of today
     const tenMonthsAgo = new Date();
-    tenMonthsAgo.setMonth(tenMonthsAgo.getMonth() - 10);
+    tenMonthsAgo.setMonth(tenMonthsAgo.getMonth() - 12);
     tenMonthsAgo.setHours(0, 0, 0, 0);
     const thisMonth = {
         start: new Date(today.getFullYear(),today.getMonth(),1),

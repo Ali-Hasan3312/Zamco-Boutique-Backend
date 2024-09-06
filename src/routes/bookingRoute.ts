@@ -5,7 +5,7 @@ const bookingRouter = express();
 
 bookingRouter.route("/book").post(roomBooking);
 bookingRouter.route("/book/getAll").get(allBookings);
-bookingRouter.route("/book/updatePayment/:id").put(updatePaymentStatus);
+bookingRouter.route("/book/update/:id").put(updatePaymentStatus);
 bookingRouter.route("/book/deleteBooking/:id").delete(deleteBooking);
 
 

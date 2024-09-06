@@ -1,6 +1,7 @@
 import { Document, model, Schema } from "mongoose";
 
 export interface UserTypes extends Document {
+    _id: string;
     photo: string;
     name: string;
     designation?: string; // Example of an optional field
@@ -12,6 +13,10 @@ export interface UserTypes extends Document {
 }
 
 const userSchema = new Schema<UserTypes>({
+    _id:{
+        type: String,
+        required: [true, "Staff ID is required"],
+    },
     photo: {
         type: String,
         required: [true, "Staff photo is required"]

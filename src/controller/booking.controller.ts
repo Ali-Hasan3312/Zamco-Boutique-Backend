@@ -78,20 +78,20 @@ export const allBookings = TryCatch(async (req, res, next) => {
 });
 export const updatePaymentStatus = TryCatch(async(req, res, next)=>{
     const {id} = req.params;
-    const { paymentStatus } = req.body;
+   
     const booking = await Booking.findById(id);
     if(!booking){
         return next(new ErrorHandler("Booking not found", 404));
     }
     const updatedBooking = await Booking.findByIdAndUpdate(
            id, 
-        { paymentStatus }, 
+        req.body, 
         { new: true }
       );
     res.status(201).json({
         success: true,
-        message: "Payment status updated successfully",
-        booking: updatedBooking
+        message: "Booking updated successfully",
+        updatedBooking
     })
 });
 export const deleteBooking = TryCatch(async (req, res, next) => {

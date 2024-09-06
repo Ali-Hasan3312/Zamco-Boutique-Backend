@@ -14,7 +14,6 @@ export const createRoom = TryCatch(async(req, res, next)=>{
    }
    const cloudPhoto = await uploadOnCloudinary(photo)
    const room = await Room.create({
-    
     roomType,
     roomPrice,
     roomStatus,

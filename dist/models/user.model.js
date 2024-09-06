@@ -3,6 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = require("mongoose");
 const userSchema = new mongoose_1.Schema({
+    _id: {
+        type: String,
+        required: [true, "Staff ID is required"],
+    },
     photo: {
         type: String,
         required: [true, "Staff photo is required"]
